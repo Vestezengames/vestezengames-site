@@ -9,7 +9,7 @@ interface StoreButtonProps {
 
 const StoreButton: React.FC<StoreButtonProps> = ({
   variant,
-  smallText,
+  smallText = "https://play.google.com/store/apps/details?id=com.VestezenGames.IdleWizardMagicAscension",
   bigText,
   onClick,
 }) => {
