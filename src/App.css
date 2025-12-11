@@ -175,8 +175,10 @@ body {
 }
 
 .gallery-thumb {
-  width: 140px;
-  height: 80px;
+  width: 22vw;              /* responsive size on mobile */
+  max-width: 140px;         /* never exceed desktop size */
+  aspect-ratio: 1100 / 620; /* keeps correct screenshot shape */
+  
   object-fit: cover;
   border-radius: 8px;
   opacity: 0.7;
