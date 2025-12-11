@@ -1,3 +1,5 @@
+import type React from "react";
+
 interface FeatureCardProps {
   title: string;
   description: string;
