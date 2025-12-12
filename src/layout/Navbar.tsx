@@ -25,10 +25,10 @@ export default function Navbar() {
           Home
         </NavLink>
         <NavLink to="/pp" className="nav-link" onClick={closeMenu}>
-          PP
+          Privacy Policy
         </NavLink>
         <NavLink to="/tos" className="nav-link" onClick={closeMenu}>
-          TOS
+          Terms of Service
         </NavLink>
         <NavLink to="/about" className="nav-link" onClick={closeMenu}>
           About
