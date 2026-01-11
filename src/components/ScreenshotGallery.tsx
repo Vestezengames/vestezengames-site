@@ -13,8 +13,8 @@ export default function ScreenshotGallery({ screenshots }: GalleryProps) {
 
   // current + target tilt/glare values (for inertia)
   const tiltRef = useRef({
-    x: 0,
-    y: 0,
+    x: 0, // rotateX (we keep this at 0)
+    y: 0, // rotateY (side-to-side)
     glareX: 50,
     glareY: 50,
     intensity: 0,
@@ -41,11 +41,13 @@ export default function ScreenshotGallery({ screenshots }: GalleryProps) {
     tilt.intensity += (target.intensity - tilt.intensity) * ease;
 
     if (cardRef.current) {
+      // Side-to-side only: rotateY, no rotateX
       cardRef.current.style.transform = `
         rotateX(${tilt.x}deg)
         rotateY(${tilt.y}deg)
         translateZ(18px)
       `;
+
     }
 
     if (glareRef.current) {
@@ -79,35 +81,36 @@ export default function ScreenshotGallery({ screenshots }: GalleryProps) {
   };
 
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    // Disable tilt on touch
-    if (e.pointerType === "touch") return;
+  if (e.pointerType === "touch") return;
 
-    const card = e.currentTarget;
-    const rect = card.getBoundingClientRect();
+  const rect = e.currentTarget.getBoundingClientRect();
 
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+  const px = (e.clientX - rect.left) / rect.width;   // 0..1
+  const py = (e.clientY - rect.top) / rect.height;   // 0..1
 
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
+  const nx = (px - 0.5) * 2; // -1..1 (left=-1, right=+1)
+  const ny = (py - 0.5) * 2; // -1..1 (top=-1, bottom=+1)
 
-    // Normalised -1..1 (0,0 in center)
-    const normX = (centerX - x) / centerX; // left/right
-    const normY = (centerY - y) / centerY; // top/bottom
+  targetRef.current = {
+    // ✅ THIS is the key change:
+    // bottom (ny positive) => rotateX positive => bottom goes inward (away)
+    // top (ny negative)    => rotateX negative => top goes inward (away)
+    x: -ny * MAX_TILT,
 
-    targetRef.current = {
-      x: -normY * MAX_TILT, // tilt away from cursor vertically
-      y: -normX * MAX_TILT, // tilt away horizontally
-      glareX: 50 + normX * -20, // move glare opposite for nice parallax
-      glareY: 50 + normY * -20,
-      intensity: Math.min(1, Math.hypot(normX, normY)),
-    };
+    // keep horizontal as before (if left/right ever feels flipped, negate nx here)
+    y: nx * MAX_TILT,
 
-    startAnimationLoop();
+    glareX: 50 + nx * 20,
+    glareY: 50 + ny * 20,
+    intensity: Math.min(1, Math.hypot(nx, ny)),
   };
 
+  startAnimationLoop();
+};
+
+
+
   const handlePointerLeave = () => {
-    // Smoothly ease back to flat
     targetRef.current = {
       x: 0,
       y: 0,
@@ -135,13 +138,12 @@ export default function ScreenshotGallery({ screenshots }: GalleryProps) {
           onPointerMove={handlePointerMove}
           onPointerLeave={handlePointerLeave}
         >
-          {/* glow behind is still in CSS ::before */}
           <img
             className="gallery-main"
             src={main}
             alt={`Screenshot ${mainIndex + 1}`}
           />
-          {/* moving glare on top */}
+          {/* If you want glare back, uncomment this + keep glareY logic above */}
           {/* <div ref={glareRef} className="hero-glare" /> */}
         </div>
       </div>

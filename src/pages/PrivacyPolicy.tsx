@@ -4,7 +4,7 @@ export default function PrivacyPolicy() {
   return (
     <div className="legal-page">
       <h1>Privacy Policy</h1>
-      <p><strong>Effective Date:</strong> May 8, 2025</p>
+      <p><strong>Effective Date:</strong> January 1, 2026</p>
 
       <p>
         VestezenGames ("we", "our", or "us") respects your privacy. This Privacy

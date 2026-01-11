@@ -4,7 +4,7 @@ export default function TermsOfService() {
   return (
     <div className="legal-page">
       <h1>Terms of Service</h1>
-      <p><strong>Effective Date:</strong> May 8, 2025</p>
+      <p><strong>Effective Date:</strong> January 1, 2026</p>
 
       <p>
         Welcome to Idle Wizard: Magic Ascension ("the Game"), developed by
