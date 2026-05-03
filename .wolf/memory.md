@@ -1,0 +1,1 @@
+- 2026-05-03: Added public/app-ads.txt for Google app-ads endpoint at /app-ads.txt.
